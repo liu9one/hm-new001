@@ -31,15 +31,23 @@
 <script>
 import axios from 'axios'
 export default {
+  created () {
+    const { password, username } = this.$route.params
+    console.log(this.$route)
+    this.username = username
+    this.password = password
+  },
   methods: {
     async login () {
       const res = await axios.post('/login', {
         username: this.username,
         password: this.password
       })
-      console.log(res)
-      const { statusCode, message } = res.data
+      // console.log(res)
+      const { statusCode, message, data } = res.data
       if (statusCode === 200) {
+        localStorage.setItem('token', data.token)
+        localStorage.setItem('userId', data.user.id)
         this.$toast(message)
         this.$router.push('./user')
       } else {
@@ -62,7 +70,7 @@ export default {
 }
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
     .tips{
         font-size: 16px;
         text-align: right;

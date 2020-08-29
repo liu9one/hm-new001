@@ -10,7 +10,7 @@ export default {
 }
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
    .new-logo{
        text-align: center;
        .iconfont{
