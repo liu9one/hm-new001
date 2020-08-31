@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     selfJump () {
-      console.log(555)
+      this.$emit('click')
       if (this.to) {
         this.$router.push(this.to)
       }

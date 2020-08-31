@@ -1,6 +1,6 @@
 <template>
   <div class="user">
-      <div class="header">
+      <div class="header" @click='$router.push("/user-edit")'>
           <div class="avatar">
               <img :src="$axios.defaults.baseURL + user.head_img" alt="">
           </div>
@@ -33,6 +33,10 @@
       <template>设置</template>
       <!-- <template #content></template> -->
   </nav-item>
+  <!-- 退出功能框 -->
+      <div class="logout" style="padding:10px" @click='logout'>
+          <van-button type="danger" block>退出登录</van-button>
+      </div>
    </div>
 </template>
 
@@ -44,14 +48,10 @@ export default {
     }
   },
   async created () {
-    const token = localStorage.getItem('token')
     const userId = localStorage.getItem('userId')
     // console.log(token, userId)
     // 向后台请求user的数据 token 必须放到请求头中
     const res = await this.$axios.get(`/user/${userId}`, {
-      headers: {
-        Authorization: token
-      }
     })
     console.log(res)
     const { statusCode, data, message } = res.data
@@ -60,6 +60,25 @@ export default {
     //   this.$toast(message)
     } else if (statusCode === 401) {
       this.$toast(message)
+    }
+  },
+  methods: {
+    async logout () {
+      // console.log('123')
+      // 弹框提示
+      try {
+        await this.$dialog.confirm({
+          title: '温馨提示',
+          message: '你确定要退出本系统吗?'
+        })
+
+        localStorage.removeItem('token')
+        localStorage.removeItem('userId')
+        this.$router.push('/login')
+        this.$toast.success('退出成功')
+      } catch {
+        this.$toast('取消退出')
+      }
     }
   }
 

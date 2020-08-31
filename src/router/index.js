@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Login from '../views/Login'
 import Register from '../views/Register'
 import User from '../views/User.vue'
+import UserEdit from '../views/UserEdit'
 
 Vue.use(VueRouter)
 
@@ -15,7 +16,8 @@ VueRouter.prototype.push = function push (location) {
 const routes = [
   { path: '/login', component: Login, name: 'login' },
   { path: '/register', component: Register, name: 'rigister' },
-  { path: '/user', component: User, name: 'user' }
+  { path: '/user', component: User, name: 'user' },
+  { path: '/user-edit', component: UserEdit, name: 'user-edit' }
 ]
 
 const router = new VueRouter({
@@ -25,7 +27,8 @@ const router = new VueRouter({
 // 设置守卫
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
-  if (to.name !== 'user' || token) {
+  const allUrl = ['user', 'user-edit']
+  if (!allUrl.includes(to.name) || token) {
     next()
   } else {
     router.push('/login')
