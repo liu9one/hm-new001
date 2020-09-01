@@ -17,12 +17,12 @@
           <span class="iconfont iconjiantou1"> </span>
       </div>
   </div>
-  <nav-item to='/follow'>
+  <nav-item to='/my-follow'>
       <template >我的关注</template>
       <template #content>关注的人</template>
   </nav-item>
-  <nav-item>
-      <template>我的跟帖</template>
+  <nav-item to='/my-comment'>
+      <template >我的跟帖</template>
       <template #content>回复/跟帖</template>
   </nav-item>
   <nav-item>

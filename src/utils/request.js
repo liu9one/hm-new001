@@ -3,7 +3,9 @@ import axios from 'axios'
 import router from '../router'
 import { Toast } from 'vant'
 Vue.prototype.$axios = axios
-axios.defaults.baseURL = 'http://localhost:3000'
+const URL = 'http://localhost:3000'
+axios.defaults.baseURL = URL
+Vue.prototype.$base = URL
 // 设置请求拦截
 axios.interceptors.request.use(function (config) {
   // 在发送请求之前做些什么
