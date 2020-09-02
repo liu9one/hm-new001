@@ -29,3 +29,11 @@ axios.interceptors.response.use(function (response) {
   // 对响应数据做点什么
   return response
 })
+// 判断图片是网络资源还是本地资源
+Vue.prototype.$url = function (url) {
+  if (url.startsWith('http')) {
+    return url
+  } else {
+    return URL + url
+  }
+}

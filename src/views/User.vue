@@ -25,7 +25,7 @@
       <template >我的跟帖</template>
       <template #content>回复/跟帖</template>
   </nav-item>
-  <nav-item>
+  <nav-item to='/my-star'>
       <template>我的收藏</template>
       <template #content>文章/视频</template>
   </nav-item>

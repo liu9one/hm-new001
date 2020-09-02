@@ -21,6 +21,7 @@ export default {
     display: flex;
     height: 50px;
     line-height: 50px;
+    width: 100%;
     text-align: center;
      border-bottom: 1px solid #ccc;
      .back,
