@@ -48,8 +48,12 @@ export default {
       if (statusCode === 200) {
         localStorage.setItem('token', data.token)
         localStorage.setItem('userId', data.user.id)
-        this.$toast(message)
-        this.$router.push('./user')
+        if (this.$route.query.back) {
+          this.$router.back()
+        } else {
+          this.$router.push('./user')
+          this.$toast(message)
+        }
       } else {
         this.$toast(message)
       }
