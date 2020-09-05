@@ -8,6 +8,8 @@ import MyFollow from '../views/MyFollow'
 import MyComment from '../views/MyComment'
 import MyStar from '../views/MyStar.vue'
 import Home from '../views/Home.vue'
+import Manage from '../views/Manage.vue'
+import PostDetail from '../views/PostDetail.vue'
 Vue.use(VueRouter)
 
 // 全局的把push的异常给处理了
@@ -24,7 +26,9 @@ const routes = [
   { path: '/my-follow', component: MyFollow, name: 'my-follow' },
   { path: '/my-comment', component: MyComment, name: 'my-comment' },
   { path: '/my-star', component: MyStar, name: 'my-star' },
-  { path: '/', component: Home, name: 'home' }
+  { path: '/', component: Home, name: 'home' },
+  { path: '/manage', component: Manage, name: 'manage' },
+  { path: '/PostDetail/:id', component: PostDetail, name: 'PostDetail' }
 ]
 
 const router = new VueRouter({

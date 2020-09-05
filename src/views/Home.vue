@@ -8,14 +8,30 @@
             <span class="iconfont iconsearch"></span>
             <span > 搜索新闻</span>
         </div>
-        <div class="user">
+        <div class="user" @click="$router.push('/user')">
             <span class="iconfont iconwode"></span>
         </div>
     </div>
+    <van-sticky class="van-more">
+ <div class="more" @click="$router.push('/manage')">
+      <span class="iconfont iconlianjie">
+      </span>
+    </div>
+</van-sticky>
     <van-tabs v-model="active" sticky animated swipeable >
         <van-tab :title="tab.name" v-for="tab in categoryList" :key="tab.id">
+           <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+          <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
           <hm-post :post='item' v-for="item in newsList" :key='item.id'></hm-post>
+          </van-list>
+          </van-pull-refresh>
         </van-tab>
+
     </van-tabs>
   </div>
 </template>
@@ -27,8 +43,12 @@ export default {
       active: 0,
       categoryList: [],
       pageIndex: 1,
-      pageSize: 10,
-      newsList: []
+      pageSize: 7,
+      newsList: [],
+      loading: false,
+      finished: false,
+      refreshing: false
+
     }
   },
   created () {
@@ -36,6 +56,12 @@ export default {
   },
   methods: {
     async getCategoryList () {
+      const activeList = JSON.parse(localStorage.getItem('activeList'))
+      if (activeList) {
+        this.categoryList = activeList
+        this.getNewsList(this.categoryList[0].id)
+        return
+      }
       const res = await this.$axios.get('/category')
       const { statusCode, data } = res.data
       if (statusCode === 200) {
@@ -54,15 +80,58 @@ export default {
       })
       const { statusCode, data } = res.data
       if (statusCode === 200) {
-        this.newsList = data
+        this.newsList = [...this.newsList, ...data]
         console.log(this.newsList)
+        this.loading = false
+        this.refreshing = false
+        if (data.length < this.pageSize) {
+          this.finished = true
+        }
       }
+    },
+    onLoad () {
+      this.pageIndex++
+      this.getNewsList(this.categoryList[this.active].id)
+    },
+    onRefresh () {
+      this.newsList = []
+      this.pageIndex = 1
+      this.loading = true
+      this.finished = false
+      this.getNewsList(this.categoryList[this.active].id)
+    }
+  },
+  watch: {
+    active (val) {
+      this.newsList = []
+      this.pageIndex = 1
+      this.loading = true
+      this.finished = false
+      this.getNewsList(this.categoryList[val].id)
     }
   }
 }
 </script>
 
 <style lang='less' scoped>
+    /deep/ .van-tabs__wrap {
+      width: 85%;
+    }
+/deep/ .van-sticky--fixed{
+  z-index: 999;
+}
+.more{
+  position:absolute;
+  right: 0;
+  background-color: #ffffff;
+  width: 15%;
+  height: 44px;
+  z-index: 999;
+   text-align: center;
+  span{
+   color: pink;
+  }
+}
  .header{
   width: 100%;
   height: 50px;
