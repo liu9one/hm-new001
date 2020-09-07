@@ -1,12 +1,13 @@
 <template>
   <div>
-      <hm-floor :comment='comment.parent' v-if="comment.parent"></hm-floor>
+      <hm-floor :count='count-1'  :comment='comment.parent' v-if="comment.parent"></hm-floor>
       <div class="hm-floor">
       <div class="title">
-        <div class="left">1. {{comment.user.nickname}}</div>
+        <div class="left">{{count}}. {{comment.user.nickname}}</div>
         <div class="time
         ">{{comment.create_date | timeNow}}</div>
-        <div class="right">回复</div>
+        <!-- <div class="right" @click="reply">回复</div> -->
+        <div class="right" @click="reply">回复</div>
       </div>
       <div class="content">{{comment.content}}</div>
     </div>
@@ -17,7 +18,15 @@
 export default {
   name: 'hm-floor',
   props: {
-    comment: Object
+    comment: Object,
+    count: Number
+  },
+  methods: {
+    // 孙子辈组件传给第一级组件,先把数据传给父级,再由父级像上传
+    reply () {
+      console.log(this.comment.id, this.comment.user.nickname)
+      this.$emit('reply', this.comment.id, this.comment.user.nickname)
+    }
   }
 }
 </script>

@@ -8,11 +8,11 @@
           <p>{{comment.user.nickname}}</p>
           <p>{{comment.create_date | timeNow}}</p>
       </div>
-      <div class="right">
+      <div class="right" @click="reply">
           <span>回复</span>
       </div>
       </div>
-      <hm-floor class="first" :comment= 'comment.parent' v-if="comment.parent"></hm-floor>
+      <hm-floor class="first" :count= 'count' @reply='onReply'  :comment= 'comment.parent' v-if="comment.parent"></hm-floor>
       <div class="content">
           {{comment.content}}
       </div>
@@ -21,8 +21,30 @@
 
 <script>
 export default {
+  data () {
+    return {
+      count: this.getCount(0, this.comment)
+    }
+  },
   props: {
     comment: Object
+  },
+  methods: {
+    getCount (num, data) {
+      if (data.parent) {
+        return this.getCount(num + 1, data.parent)
+      } else {
+        return num
+      }
+    },
+    // 向父组件发送评论nickname,和评论的id
+    reply () {
+      console.log(this.comment.user.nickname, this.comment.id)
+      this.$bus.$emit('reply', this.comment.id, this.comment.user.nickname)
+    },
+    onReply (id, nickname) {
+      this.$emit('reply', id, nickname)
+    }
   }
 }
 </script>

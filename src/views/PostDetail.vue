@@ -40,11 +40,19 @@
      <!-- 评论u部分  -->
       <div class="comment-list">
         <h3 >精彩跟帖</h3>
-        <hm-comment :comment='comment' v-for="comment in commentList" :key='comment.id'></hm-comment>
+        <hm-comment :comment='comment'
+         @reply='onReply'
+         v-for="comment in commentList"
+          :key='comment.id'>
+          </hm-comment>
       </div>
-    <div class="footer">
+      <div class="footer-textrea" v-if="isshowTextarea">
+        <textarea :placeholder="'回复 :'+ nickname" ref="textarea" v-model="txtcontent" ></textarea>
+        <van-button type="primary"  @click="publish" >发送</van-button>
+      </div>
+    <div class="footer" v-else>
         <div class="search">
-          <input type="text" placeholder="回复">
+          <input type="text" @focus="onFocus" placeholder="回复">
         </div>
         <span class="iconfont iconpinglun-"><i>200</i></span>
         <span class="iconfont iconshoucang " @click="star" :class="{activeStar: content.has_star}"></span>
@@ -62,13 +70,23 @@ export default {
 
         }
       },
-      commentList: []
+      commentList: [],
+      isshowTextarea: false,
+      txtcontent: '',
+      nickname: '',
+      replyId: ''
     }
   },
   created () {
     this.getContent()
     // 获取评论列表
     this.getCommentList()
+    // 给bus注册事件
+    // console.log(this.$bus)
+    this.$bus.$on('reply', this.onReply)
+  },
+  beforeDestroy () {
+    this.$bus.$off('reply', this.onReply)
   },
   methods: {
     async getContent () {
@@ -142,6 +160,38 @@ export default {
         this.commentList = data
         console.log(this.commentList)
       }
+    },
+    // 文本框获得焦点
+    async onFocus () {
+      this.isshowTextarea = true
+      await this.$nextTick
+      this.$refs.textarea.focus()
+    },
+    // 发送回复内容
+    async publish () {
+      if (this.txtcontent.trim() === '') return this.$toast('评论不能为空')
+      const res = await this.$axios.post(`/post_comment/${this.content.id}`, {
+        content: this.txtcontent,
+        parent_id: this.replyId
+      })
+      const { statusCode, message } = res.data
+      if (statusCode === 200) {
+        this.$toast.success(message)
+        this.getCommentList()
+        this.txtcontent = ''
+        this.replyId = ''
+        this.nickname = ''
+        this.isshowTextarea = false
+      }
+    },
+    // 接收到子组件的数据后 操作弹出textarea 回显nickname
+    async onReply (id, nickname) {
+      console.log(id, nickname)
+      this.isshowTextarea = true
+      await this.$nextTick()
+      this.$refs.textarea.focus()
+      this.nickname = '@' + nickname
+      this.replyId = id
     }
   }
 
@@ -283,5 +333,28 @@ export default {
 }
 .post-detail{
   padding-bottom: 50px;
+}
+.footer-textrea{
+  height: 70px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around ;
+  align-items: center;
+  padding: 10px;
+  background-color: #fff;
+  z-index: 999;
+  border-top: 1px solid #666;
+  textarea{
+    width: 260px;
+    height: 100%;
+    padding: 5px;
+    border: none;
+    border-radius: 15px;
+    font-size: 14px;
+    text-indent: 1.5em;
+    background-color: #eee;
+  }
 }
 </style>
