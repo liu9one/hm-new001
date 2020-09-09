@@ -10,6 +10,7 @@ import MyStar from '../views/MyStar.vue'
 import Home from '../views/Home.vue'
 import Manage from '../views/Manage.vue'
 import PostDetail from '../views/PostDetail.vue'
+import Search from '../views/Search.vue'
 Vue.use(VueRouter)
 
 // 全局的把push的异常给处理了
@@ -28,7 +29,8 @@ const routes = [
   { path: '/my-star', component: MyStar, name: 'my-star' },
   { path: '/', component: Home, name: 'home' },
   { path: '/manage', component: Manage, name: 'manage' },
-  { path: '/PostDetail/:id', component: PostDetail, name: 'PostDetail' }
+  { path: '/PostDetail/:id', component: PostDetail, name: 'PostDetail' },
+  { path: '/Search', component: Search, name: 'Search' }
 ]
 
 const router = new VueRouter({

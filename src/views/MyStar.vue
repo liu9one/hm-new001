@@ -2,7 +2,7 @@
   <div class="my-star">
       <new-header>我的收藏</new-header>
       <div class="list">
-          <div class="item" v-for="item in starList" :key='item.id'>
+          <!-- <div class="item" v-for="item in starList" :key='item.id'>
               <div class="info">
                   <div class="title">
                       {{item.title}}
@@ -15,7 +15,8 @@
               <div class="img">
                   <img :src="$url(item.cover[0].url)" alt="">
               </div>
-          </div>
+          </div> -->
+          <hm-post :post='item' v-for="item in starList" :key="item.id"></hm-post>
       </div>
   </div>
 </template>
@@ -37,6 +38,9 @@ export default {
       if (statusCode === 200) {
         this.starList = data
         console.log(this.starList)
+        this.starList.forEach(item => {
+          item.comment_length = item.comments.length
+        })
       }
     }
   }

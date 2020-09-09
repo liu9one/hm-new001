@@ -15,7 +15,7 @@
       </div>
     </div>
     </van-sticky>
-    <div class="content">
+    <div class="content" @click="onBlur">
       <h4 class="title">{{content.title}}</h4>
       <div class="user">
         <span>{{content.user.nickname}}</span>&nbsp;
@@ -54,7 +54,7 @@
         <div class="search">
           <input type="text" @focus="onFocus" placeholder="回复">
         </div>
-        <span class="iconfont iconpinglun-"><i>200</i></span>
+        <span class="iconfont iconpinglun-"><i>{{content.comment_length}}</i></span>
         <span class="iconfont iconshoucang " @click="star" :class="{activeStar: content.has_star}"></span>
         <span class="iconfont iconfenxiang"></span>
       </div>
@@ -192,6 +192,9 @@ export default {
       this.$refs.textarea.focus()
       this.nickname = '@' + nickname
       this.replyId = id
+    },
+    onBlur () {
+      this.isshowTextarea = false
     }
   }
 
@@ -256,7 +259,7 @@ export default {
   .info{
     width: 100%;
     font-size: 16px;
-    img{
+   /deep/ img{
       width: 100%;
     }
 
@@ -310,8 +313,9 @@ export default {
       background-color:red;
       font-size: 10px;
       color: #fff;
-      border-radius: 5px;
+      border-radius: 7px;
       font-style: normal;
+      padding: 0 5px;
     }
   }
   .search{

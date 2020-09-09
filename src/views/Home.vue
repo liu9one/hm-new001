@@ -4,7 +4,7 @@
         <div class="logo">
             <span class="iconfont iconnew"></span>
         </div>
-        <div class="search">
+        <div class="search" @click="$router.push('/Search')">
             <span class="iconfont iconsearch"></span>
             <span > 搜索新闻</span>
         </div>

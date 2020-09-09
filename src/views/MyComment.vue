@@ -20,7 +20,7 @@
 
              </div>
              <div class="content"> {{item.content}}</div>
-             <div class="origin">
+             <div class="origin" @click="$router.push(`/PostDetail/${item.post.id}`)">
                  <span>原文: {{item.post.title}}</span>
              </div>
          </div>
@@ -55,6 +55,7 @@ export default {
       })
       const { statusCode, data } = res.data
       if (statusCode === 200) {
+        data.reverse()
         this.commentList = [...this.commentList, ...data]
         console.log(this.commentList)
         this.loading = false
